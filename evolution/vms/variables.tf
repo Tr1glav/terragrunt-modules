@@ -26,10 +26,6 @@ variable "subnet_id" {
   type = string
 }
 
-variable "image_id" {
-  type = string
-}
-
 variable "security_groups" {
   type    = map(string)
   default = {}
