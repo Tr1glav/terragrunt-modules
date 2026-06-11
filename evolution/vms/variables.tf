@@ -31,10 +31,6 @@ variable "security_groups" {
   default = {}
 }
 
-variable "flavors" {
-  type = any
-}
-
 variable "username" {
   type = string
 }
