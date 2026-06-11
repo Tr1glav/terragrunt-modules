@@ -2,6 +2,18 @@ variable "project_id" {
   type = string
 }
 
+variable "customer_id" {
+  type = string
+}
+
+variable "auth_key_id" {
+  type = string
+}
+
+variable "auth_secret" {
+  type = string
+}
+
 variable "name" {
   type    = string
   default = "evo_vpc"
