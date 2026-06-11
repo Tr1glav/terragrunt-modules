@@ -11,10 +11,10 @@ terraform {
   }
 }
 provider "cloudru" {
-  project_id  = data.vault_kv_secret_v2.secrets.data["project_id"]
-  customer_id = data.vault_kv_secret_v2.secrets.data["customer_id"]
-  auth_key_id = data.vault_kv_secret_v2.secrets.data["IAM_CLIENT_ID"]
-  auth_secret = data.vault_kv_secret_v2.secrets.data["IAM_CLIENT_SECRET"]
+  project_id   = var.project_id
+  customer_id  = var.customer_id
+  auth_key_id  = var.auth_key_id
+  auth_secret  = var.auth_secret
   endpoints = {
     iam_endpoint            = "iam.api.cloud.ru:443"
     object_storage_endpoint = "https://s3.cloud.ru"
