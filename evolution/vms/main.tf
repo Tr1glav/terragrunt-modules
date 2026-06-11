@@ -31,13 +31,13 @@ resource "cloudru_evolution_compute_disk" "boot_disk" {
   name       = "${each.key}-root"
 
   disk_type_identifier = {
-    id = var.disk_type_id
+    id = local.cloudru_disk_type
   }
 
   bootable = true
   size     = each.value.disk
 
-  image_id = var.image_id
+  image_id = local.images["Ubuntu 24.04"].id
 
   zone_identifier = {
     name = var.zone

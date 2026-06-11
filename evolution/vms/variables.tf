@@ -26,10 +26,6 @@ variable "subnet_id" {
   type = string
 }
 
-variable "disk_type_id" {
-  type = string
-}
-
 variable "image_id" {
   type = string
 }
