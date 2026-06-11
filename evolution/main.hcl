@@ -6,7 +6,7 @@ terraform {
   required_providers {
     cloudru = {
       source  = "cloud.ru/cloudru/cloud"
-      version = "2.0.0"
+      version = "2.0.2"
     }
   }
 }
