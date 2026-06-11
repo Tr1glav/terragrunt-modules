@@ -1,0 +1,1 @@
+project_id = data.vault_kv_secret_v2.secrets.data["project_id"]
