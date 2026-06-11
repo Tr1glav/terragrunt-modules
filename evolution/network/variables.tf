@@ -24,4 +24,5 @@ variable "subnet_address" {
 
 variable "zone" {
   type = string
+  default = inputs.cloudru_default_az
 }
