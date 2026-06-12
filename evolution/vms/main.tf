@@ -31,7 +31,7 @@ resource "cloudru_evolution_compute_disk" "boot_disk" {
   name       = "${each.key}-root"
 
   disk_type_identifier = {
-    id = local.cloudru_disk_type
+    id = local.cloudru_disk_type.id
   }
 
   bootable = true
