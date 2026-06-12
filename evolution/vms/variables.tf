@@ -38,7 +38,5 @@ variable "public_key" {
 variable "required_image" {
   description = "default image for vms"
   type        = string
-  default     = {
-    "Ubuntu 24.04"
-  }
+  default     = ["Ubuntu 24.04"]
 }
