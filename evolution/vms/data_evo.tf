@@ -52,5 +52,5 @@ locals {
 
 
 output "data-subnet" {
-  value = data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets[0].subnet_address
+  value = data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets
 }
