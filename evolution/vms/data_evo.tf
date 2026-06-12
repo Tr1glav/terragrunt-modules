@@ -38,7 +38,7 @@ locals {
     ]), null)
   }
   sg = try(one([
-    for s in data.cloudru_evolution_compute_security_group.resource_security_group.flavors : s
+    for s in data.cloudru_evolution_compute_security_group.resource_security_group : s
   ]), null)
   required_images = [
     var.required_image
