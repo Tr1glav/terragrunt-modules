@@ -12,6 +12,13 @@ data "cloudru_evolution_vpc_vpc_collection" "datasource_vpc" {
   page_size  = 100
   filter     = "name in ['evo_vpc']"
 }
+resource "cloudru_evolution_compute_security_group" "resource_security_group" {
+  project_id = var.project_id
+
+  zone_identifier = {
+    name = var.zone
+  }
+}
 
 data "cloudru_evolution_compute_subnet_collection" "datasource_subnet" {
   project_id = var.project_id
@@ -30,6 +37,11 @@ locals {
       s if s.name == "${config.flavor_type}-${config.cpu}-${config.ram}"
     ]), null)
   }
+  sg = {
+    try(one([
+      for s in data.cloudru_evolution_compute_security_group.resource_security_group.flavors :
+    ]), null)
+  } 
   required_images = [
     var.required_image
   ]
