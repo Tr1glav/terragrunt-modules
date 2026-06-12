@@ -12,7 +12,7 @@ data "cloudru_evolution_vpc_vpc_collection" "datasource_vpc" {
   page_size  = 100
   filter     = "name in ['evo_vpc']"
 }
-resource "cloudru_evolution_compute_security_group" "resource_security_group" {
+data "cloudru_evolution_compute_security_group" "resource_security_group" {
   project_id = var.project_id
 
   zone_identifier = {
