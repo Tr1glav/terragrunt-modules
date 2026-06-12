@@ -6,6 +6,7 @@ data "cloudru_evolution_compute_flavor_collection" "flavor_collection" {
 }
 data "cloudru_evolution_compute_image_collection" "image_collection" {
   project_id = var.project_id
+  page_size  = 1000
 }
 data "cloudru_evolution_vpc_vpc_collection" "datasource_vpc" {
   project_id = var.project_id
@@ -42,19 +43,8 @@ locals {
     for subnet in try(data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets, []) :
     subnet.subnet_address => subnet
   }
-  required_images = [
-    var.required_image
-  ]
   images = {
-    for image_name in local.required_images : image_name =>
-    try(one([
-      for s in data.cloudru_evolution_compute_image_collection.image_collection.images :
-      s if s.display_name == image_name.subnet_address
-    ]), null)
+    for img in data.cloudru_evolution_compute_image_collection.image_collection.images :
+    img.display_name => img
   }
-}
-
-
-output "data-subnet" {
-  value = data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets
 }
