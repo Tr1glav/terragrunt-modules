@@ -34,7 +34,10 @@ locals {
       s if s.name == "${config.flavor_type}-${config.cpu}-${config.ram}"
     ]), null)
   }
-  sg = try(data.cloudru_evolution_compute_security_group_collection.datasource_security_group, [])
+  sg = {
+    for sg in try(data.cloudru_evolution_compute_security_group_collection.datasource_security_group.security_groups, []) :
+    sg.name => sg
+  }
   required_images = [
     var.required_image
   ]
