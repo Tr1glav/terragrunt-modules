@@ -22,10 +22,6 @@ variable "vms" {
   type = any
 }
 
-variable "subnet_id" {
-  type = string
-}
-
 variable "security_groups" {
   type    = map(string)
   default = {}

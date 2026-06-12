@@ -7,7 +7,15 @@ data "cloudru_evolution_compute_flavor_collection" "flavor_collection" {
 data "cloudru_evolution_compute_image_collection" "image_collection" {
   project_id = var.project_id
 }
+data "cloudru_evolution_vpc_vpc_collection" "datasource_vpc" {
+  project_id = var.project_id
+  page_size  = 100
+  filter     = "name in ['evo_vpc']"
+}
 
+data "cloudru_evolution_compute_subnet_collection" "datasource_subnet" {
+  project_id = var.project_id
+}
 
 locals {
   cloudru_disk_types = [
@@ -32,4 +40,9 @@ locals {
       s if s.display_name == image_name
     ]), null)
   }
+}
+
+
+output "data-subnet" {
+  value = data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets[0].subnet_address
 }
