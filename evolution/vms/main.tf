@@ -48,7 +48,7 @@ resource "cloudru_evolution_compute_interface" "this" {
   for_each   = var.vms
   project_id = var.project_id
   name       = "${each.key}-eth0"
-  subnet_id  = data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets[0]
+  subnet_id  = data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets[0].id
   ip_address = each.value.ip
   type       = "INTERFACE_TYPE_REGULAR"
 
