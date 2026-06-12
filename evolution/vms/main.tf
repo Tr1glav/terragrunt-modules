@@ -81,7 +81,7 @@ resource "cloudru_evolution_compute_vm" "this" {
   }
 
   flavor_identifier = {
-    name = var.flavors[each.key].name
+    name = local.flavors[each.key].name
   }
 
   disk_identifiers = [
