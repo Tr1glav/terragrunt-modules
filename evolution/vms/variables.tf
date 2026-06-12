@@ -34,3 +34,11 @@ variable "username" {
 variable "public_key" {
   type = string
 }
+
+variable "required_image" {
+  description = "default image for vms"
+  type        = string
+  default     = {
+    "Ubuntu 24.04"
+  }
+}
