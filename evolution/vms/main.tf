@@ -60,10 +60,10 @@ resource "cloudru_evolution_compute_interface" "this" {
 
   security_groups_identifiers = {
     value = !strcontains(each.key, "router") ? concat(
-      [{ id = var.security_groups["default"] }],
+      [{ id = local.sg["default"] }],
       length(try(each.value.sg, [])) > 0 ? [
         for sg_name in each.value.sg : {
-          id = var.security_groups[sg_name]
+          id = local.sg[sg_name]
         }
       ] : []
     ) : []
