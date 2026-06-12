@@ -24,7 +24,7 @@ locals {
   cloudru_disk_type = local.cloudru_disk_types.0
 
   flavors = {
-    for name, config in local.vms : name =>
+    for name, config in var.vms : name =>
     try(one([
       for s in data.cloudru_evolution_compute_flavor_collection.flavor_collection.flavors :
       s if s.name == "${config.flavor_type}-${config.cpu}-${config.ram}"
