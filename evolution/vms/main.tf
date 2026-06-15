@@ -77,7 +77,7 @@ resource "cloudru_evolution_compute_vm" "this" {
   name = each.key
 
   zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].zone
+    name = local.subnet_by_cidr[each.value.subnet]
   }
 
   flavor_identifier = {
