@@ -40,7 +40,7 @@ resource "cloudru_evolution_compute_disk" "boot_disk" {
   image_id = local.images["Ubuntu 24.04"].id
 
   zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].availability_zone.name
+    name = local.subnet_by_cidr[each.value.subnet].zone.name
   }
 }
 
@@ -53,7 +53,7 @@ resource "cloudru_evolution_compute_interface" "this" {
   type       = "INTERFACE_TYPE_REGULAR"
 
   zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].availability_zone.name
+    name = local.subnet_by_cidr[each.value.subnet].zone.name
   }
 
   interface_security_enabled = !strcontains(each.key, "router")
@@ -77,7 +77,7 @@ resource "cloudru_evolution_compute_vm" "this" {
   name = each.key
 
   zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].availability_zone.name
+    name = local.subnet_by_cidr[each.value.subnet].zone.name
   }
 
   flavor_identifier = {
@@ -120,7 +120,7 @@ resource "cloudru_evolution_compute_external_ip" "this" {
   project_id   = var.project_id
 
   zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].availability_zone.name
+    name = local.subnet_by_cidr[each.value.subnet].zone.name
   }
 
   name = "${each.key}-external-ip"
