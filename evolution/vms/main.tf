@@ -115,15 +115,15 @@ resource "cloudru_evolution_compute_vm" "this" {
   depends_on = [cloudru_evolution_compute_interface.this]
 }
 
-resource "time_sleep" "wait_for_external_ip" {
+resource "time_sleep" "timeout" {
   count = length([
     for k, v in var.vms : k if v.external_ip == true
   ]) > 0 ? 1 : 0
+  
+  depends_on = [cloudru_evolution_compute_external_ip.this,cloudru_evolution_compute_disk.boot_disk]
 
-  depends_on = [cloudru_evolution_compute_external_ip.this]
-
-  create_duration  = "30s"
-  destroy_duration = "30s"
+  create_duration  = "10s"
+  destroy_duration = "10s"
 }
 
 resource "cloudru_evolution_compute_external_ip" "this" {
