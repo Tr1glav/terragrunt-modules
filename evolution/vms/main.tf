@@ -53,7 +53,7 @@ resource "cloudru_evolution_compute_interface" "this" {
   type       = "INTERFACE_TYPE_REGULAR"
 
   zone_identifier = {
-    name = var.zone
+    name = local.subnet_by_cidr[each.value.subnet].id
   }
 
   interface_security_enabled = !strcontains(each.key, "router")
