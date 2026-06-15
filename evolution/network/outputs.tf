@@ -10,11 +10,11 @@ output "vpcs" {
 output "subnets" {
   value = {
     for k, subnet in cloudru_evolution_compute_subnet.this : k => {
-      id             = vpc.id
-      name           = vpc.name
-      vpc_id         = vpc.vpc_id
-      subnet_address = vpc.subnet_address
-      zone           = vpc.zone_identifier
+      id             = subnet.id
+      name           = subnet.name
+      vpc_id         = subnet.vpc_id
+      subnet_address = subnet.subnet_address
+      zone           = subnet.zone_identifier
     }
   }
 }
