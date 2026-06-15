@@ -139,9 +139,4 @@ resource "cloudru_evolution_compute_external_ip" "this" {
   }
 
   name = "${each.key}-external-ip"
-
-  timeouts {
-    create = "10m"
-    delete = "10m"
-  }
 }
