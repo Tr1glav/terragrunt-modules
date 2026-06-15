@@ -7,10 +7,10 @@ terraform {
   }
 }
 provider "cloudru" {
-  project_id   = var.project_id
-  customer_id  = var.customer_id
-  auth_key_id  = var.auth_key_id
-  auth_secret  = var.auth_secret
+  project_id  = var.project_id
+  customer_id = var.customer_id
+  auth_key_id = var.auth_key_id
+  auth_secret = var.auth_secret
   endpoints = {
     iam_endpoint            = "iam.api.cloud.ru:443"
     object_storage_endpoint = "https://s3.cloud.ru"
@@ -24,30 +24,52 @@ provider "cloudru" {
     nlb_endpoint            = "nlb.api.cloud.ru"
   }
 }
+data "cloudru_evolution_compute_zone_collection" "all" {
+  project_id = var.project_id
+}
+
 locals {
+  all_zones = data.cloudru_evolution_compute_zone_collection.all.zones
+
+  sg_zone_list = flatten([
+    for sg_name, rules in var.sg_rules : [
+      for zone in local.all_zones : {
+        key       = "${sg_name}-${zone.short_name}"
+        sg_name   = sg_name
+        zone_name = zone.name
+      }
+    ]
+  ])
+
+  sg_zone_map = {
+    for item in local.sg_zone_list : item.key => item
+  }
+
   flat_rules = flatten([
     for sg_name, rules in var.sg_rules : [
       for rule in rules : [
-        for subnet in rule.subnets : {
-          id               = "${sg_name}-${rule.direction}-${rule.protocol}-${rule.port}-${subnet}"
-          sg_name          = sg_name
-          direction        = rule.direction
-          protocol         = rule.protocol
-          port             = rule.port
-          remote_ip_prefix = subnet
-        }
+        for subnet in rule.subnets : [
+          for zone in local.all_zones : {
+            id               = "${sg_name}-${zone.short_name}-${rule.direction}-${rule.protocol}-${rule.port}-${subnet}"
+            sg_key           = "${sg_name}-${zone.short_name}"
+            direction        = rule.direction
+            protocol         = rule.protocol
+            port             = rule.port
+            remote_ip_prefix = subnet
+          }
+        ]
       ]
     ]
   ])
 }
 
 resource "cloudru_evolution_compute_security_group" "this" {
-  for_each = var.sg_rules
+  for_each = local.sg_zone_map
 
   project_id = var.project_id
 
   zone_identifier = {
-    name = var.zone
+    name = each.value.zone_name
   }
 
   name        = each.key
@@ -59,11 +81,11 @@ resource "cloudru_evolution_compute_security_group_rule" "this" {
     for rule in local.flat_rules : rule.id => rule
   }
 
-  security_group_id = cloudru_evolution_compute_security_group.this[each.value.sg_name].id
+  security_group_id = cloudru_evolution_compute_security_group.this[each.value.sg_key].id
   direction         = each.value.direction == "ingress" ? "TRAFFIC_DIRECTION_INGRESS" : "TRAFFIC_DIRECTION_EGRESS"
   ether_type        = "ETHER_TYPE_IPV4"
   ip_protocol       = each.value.protocol
   port_range        = each.value.port
   remote_ip_prefix  = each.value.remote_ip_prefix
-  description       = "${each.value.sg_name} rule for ${each.value.remote_ip_prefix}"
+  description       = "${each.value.sg_key} rule for ${each.value.remote_ip_prefix}"
 }
