@@ -35,10 +35,6 @@ variable "public_key" {
   type = string
 }
 
-variable "subnet" {
-  type = string
-}
-
 variable "required_image" {
   description = "default image for vms"
   type        = string
