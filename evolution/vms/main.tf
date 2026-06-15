@@ -53,7 +53,7 @@ resource "cloudru_evolution_compute_interface" "this" {
   type       = "INTERFACE_TYPE_REGULAR"
 
   zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].id
+    name = local.subnet_by_cidr[each.value.subnet].zone
   }
 
   interface_security_enabled = !strcontains(each.key, "router")
@@ -77,7 +77,7 @@ resource "cloudru_evolution_compute_vm" "this" {
   name = each.key
 
   zone_identifier = {
-    name = var.zone
+    name = local.subnet_by_cidr[each.value.subnet].zone
   }
 
   flavor_identifier = {
@@ -120,7 +120,7 @@ resource "cloudru_evolution_compute_external_ip" "this" {
   project_id   = var.project_id
 
   zone_identifier = {
-    name = var.zone
+    name = local.subnet_by_cidr[each.value.subnet].zone
   }
 
   name = "${each.key}-external-ip"
