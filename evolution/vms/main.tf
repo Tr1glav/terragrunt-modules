@@ -7,10 +7,10 @@ terraform {
   }
 }
 provider "cloudru" {
-  project_id   = var.project_id
-  customer_id  = var.customer_id
-  auth_key_id  = var.auth_key_id
-  auth_secret  = var.auth_secret
+  project_id  = var.project_id
+  customer_id = var.customer_id
+  auth_key_id = var.auth_key_id
+  auth_secret = var.auth_secret
   endpoints = {
     iam_endpoint            = "iam.api.cloud.ru:443"
     object_storage_endpoint = "https://s3.cloud.ru"
@@ -60,10 +60,10 @@ resource "cloudru_evolution_compute_interface" "this" {
 
   security_groups_identifiers = {
     value = !strcontains(each.key, "router") ? concat(
-      [{ id = local.sg["default"].id }],
+      [{ id = local.sg["default-${local.zone_name_to_short_name[local.subnet_by_cidr[each.value.subnet].zone.name]}"].id }],
       length(try(each.value.sg, [])) > 0 ? [
         for sg_name in each.value.sg : {
-          id = local.sg[sg_name].id
+          id = local.sg["${sg_name}-${local.zone_name_to_short_name[local.subnet_by_cidr[each.value.subnet].zone.name]}"].id
         }
       ] : []
     ) : []

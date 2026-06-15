@@ -17,11 +17,20 @@ data "cloudru_evolution_compute_subnet_collection" "datasource_subnet" {
   project_id = var.project_id
 }
 
+data "cloudru_evolution_compute_zone_collection" "all" {
+  project_id = var.project_id
+}
+
 locals {
   cloudru_disk_types = [
     for s in data.cloudru_evolution_compute_disk_type_collection.disk_type.disk_types : s if s.name == "SSD"
   ]
   cloudru_disk_type = local.cloudru_disk_types.0
+
+  zone_name_to_short_name = {
+    for zone in data.cloudru_evolution_compute_zone_collection.all.zones :
+    zone.name => zone.short_name
+  }
 
   flavors = {
     for name, config in var.vms : name =>
