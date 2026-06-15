@@ -48,7 +48,7 @@ resource "cloudru_evolution_compute_interface" "this" {
   for_each   = var.vms
   project_id = var.project_id
   name       = "${each.key}-eth0"
-  subnet_id  = local.subnet_by_cidr[var.subnet].id
+  subnet_id  = local.subnet_by_cidr[each.value.subnet].id
   ip_address = each.value.ip
   type       = "INTERFACE_TYPE_REGULAR"
 

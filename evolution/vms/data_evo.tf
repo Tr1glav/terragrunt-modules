@@ -8,11 +8,6 @@ data "cloudru_evolution_compute_image_collection" "image_collection" {
   project_id = var.project_id
   page_size  = 1000
 }
-data "cloudru_evolution_vpc_vpc_collection" "datasource_vpc" {
-  project_id = var.project_id
-  page_size  = 1000
-  filter     = "name in ['evo_vpc']"
-}
 data "cloudru_evolution_compute_security_group_collection" "datasource_security_group" {
   project_id = var.project_id
   page_size  = 1000
