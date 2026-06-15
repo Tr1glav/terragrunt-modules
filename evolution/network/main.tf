@@ -47,7 +47,7 @@ resource "cloudru_evolution_vpc_vpc" "this" {
 
 resource "cloudru_evolution_compute_subnet" "this" {
   for_each = {
-    for s in local.subnets : "${s.vpc_key}.${s.subnet_key}" => s
+    for s in local.subnets_flat : "${s.vpc_key}.${s.subnet_key}" => s
   }
   project_id     = var.project_id
   name           = each.value.subnet_key
