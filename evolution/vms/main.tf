@@ -4,6 +4,10 @@ terraform {
       source  = "cloud.ru/cloudru/cloud"
       version = "2.0.2"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.12"
+    }
   }
 }
 provider "cloudru" {
@@ -111,6 +115,17 @@ resource "cloudru_evolution_compute_vm" "this" {
   depends_on = [cloudru_evolution_compute_interface.this]
 }
 
+resource "time_sleep" "wait_for_external_ip" {
+  count = length([
+    for k, v in var.vms : k if v.external_ip == true
+  ]) > 0 ? 1 : 0
+
+  depends_on = [cloudru_evolution_compute_external_ip.this]
+
+  create_duration  = "30s"
+  destroy_duration = "30s"
+}
+
 resource "cloudru_evolution_compute_external_ip" "this" {
   for_each = {
     for k, v in var.vms : k => v if v.external_ip == true
@@ -124,4 +139,9 @@ resource "cloudru_evolution_compute_external_ip" "this" {
   }
 
   name = "${each.key}-external-ip"
+
+  timeouts {
+    create = "10m"
+    delete = "10m"
+  }
 }
