@@ -41,7 +41,7 @@ locals {
   }
   subnet_by_cidr = {
     for subnet in try(data.cloudru_evolution_compute_subnet_collection.datasource_subnet.subnets, []) :
-    subnet.subnet_address => subnet
+    vpc.subnet_address => subnet
   }
   images = {
     for img in data.cloudru_evolution_compute_image_collection.image_collection.images :
