@@ -77,7 +77,7 @@ resource "cloudru_evolution_compute_interface" "this" {
 resource "cloudru_evolution_compute_vm" "this" {
   for_each   = var.vms
   project_id = var.project_id
-
+  depends_on = [cloudru_evolution_compute_external_ip.this]
   name = each.key
 
   zone_identifier = {
@@ -113,17 +113,6 @@ resource "cloudru_evolution_compute_vm" "this" {
   }
 
   depends_on = [cloudru_evolution_compute_interface.this]
-}
-
-resource "time_sleep" "timeout" {
-  count = length([
-    for k, v in var.vms : k if v.external_ip == true
-  ]) > 0 ? 1 : 0
-  
-  depends_on = [cloudru_evolution_compute_external_ip.this,cloudru_evolution_compute_disk.boot_disk]
-
-  create_duration  = "10s"
-  destroy_duration = "10s"
 }
 
 resource "cloudru_evolution_compute_external_ip" "this" {
