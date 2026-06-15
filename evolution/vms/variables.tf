@@ -14,10 +14,6 @@ variable "auth_secret" {
   type = string
 }
 
-variable "zone" {
-  type = string
-}
-
 variable "vms" {
   type = any
 }
