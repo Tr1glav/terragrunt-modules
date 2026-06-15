@@ -19,7 +19,7 @@ variable "description" {
   default = "TF management vpc"
 }
 
-variable "subnets" {
+variable "vpc" {
   type = map(map(map(string)))
   description = <<-EOT
     Structure:
