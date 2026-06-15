@@ -27,7 +27,7 @@ provider "cloudru" {
 
 locals {
   subnets_flat = flatten([
-    for vpc_name, subnets in var.subnets : [
+    for vpc_name, subnets in var.vpc : [
       for subnet_name, config in subnets : {
         vpc_key      = vpc_name
         subnet_key   = subnet_name
@@ -39,7 +39,7 @@ locals {
 }
 
 resource "cloudru_evolution_vpc_vpc" "this" {
-  for_each    = var.subnets
+  for_each    = var.vpc
   project_id  = var.project_id
   name        = each.key
   description = var.description
