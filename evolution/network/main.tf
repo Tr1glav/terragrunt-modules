@@ -25,21 +25,38 @@ provider "cloudru" {
   }
 }
 
+locals {
+  subnets_flat = flatten([
+    for vpc_name, subnets in var.subnets : [
+      for subnet_name, config in subnets : {
+        vpc_key      = vpc_name
+        subnet_key   = subnet_name
+        subnet       = config["subnet"]
+        zone         = config["zone"]
+      }
+    ]
+  ])
+}
+
 resource "cloudru_evolution_vpc_vpc" "this" {
+  for_each    = var.subnets
   project_id  = var.project_id
-  name        = var.name
+  name        = each.key
   description = var.description
 }
 
 resource "cloudru_evolution_compute_subnet" "this" {
+  for_each = {
+    for s in local.subnets_flat : "${s.vpc_key}.${s.subnet_key}" => s
+  }
   project_id     = var.project_id
-  name           = var.subnet_name
-  vpc_id         = cloudru_evolution_vpc_vpc.this.id
-  subnet_address = var.subnet_address
+  name           = each.value.subnet_key
+  vpc_id         = cloudru_evolution_vpc_vpc.this[each.value.vpc_key].id
+  subnet_address = each.value.subnet
   routed_network = true
 
   zone_identifier = {
-    name = var.zone
+    name = each.value.zone
   }
 
   default = true
