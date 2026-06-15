@@ -77,7 +77,6 @@ resource "cloudru_evolution_compute_interface" "this" {
 resource "cloudru_evolution_compute_vm" "this" {
   for_each   = var.vms
   project_id = var.project_id
-  depends_on = [cloudru_evolution_compute_external_ip.this]
   name = each.key
 
   zone_identifier = {
