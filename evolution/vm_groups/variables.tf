@@ -14,8 +14,19 @@ variable "auth_secret" {
   type = string
 }
 
-variable "vms" {
-  type = any
+variable "vm_groups" {
+  type = map(object({
+    external_ip = bool
+    subnet      = string
+    cpu         = number
+    ram         = number
+    disk        = number
+    flavor_type = string
+    sg          = list(string)
+    vms = map(object({
+      ip = string
+    }))
+  }))
 }
 
 variable "security_groups" {

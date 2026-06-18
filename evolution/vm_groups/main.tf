@@ -30,7 +30,7 @@ provider "cloudru" {
 }
 
 resource "cloudru_evolution_compute_disk" "boot_disk" {
-  for_each   = var.vms
+  for_each   = local.vms
   project_id = var.project_id
   name       = "${each.key}-root"
 
@@ -49,7 +49,7 @@ resource "cloudru_evolution_compute_disk" "boot_disk" {
 }
 
 resource "cloudru_evolution_compute_interface" "this" {
-  for_each   = var.vms
+  for_each   = local.vms
   project_id = var.project_id
   name       = "${each.key}-eth0"
   subnet_id  = local.subnet_by_cidr[each.value.subnet].id
@@ -75,7 +75,7 @@ resource "cloudru_evolution_compute_interface" "this" {
 }
 
 resource "cloudru_evolution_compute_vm" "this" {
-  for_each   = var.vms
+  for_each   = local.vms
   project_id = var.project_id
   name = each.key
 
@@ -116,7 +116,7 @@ resource "cloudru_evolution_compute_vm" "this" {
 
 resource "cloudru_evolution_compute_external_ip" "this" {
   for_each = {
-    for k, v in var.vms : k => v if v.external_ip == true
+    for k, v in local.vms : k => v if v.external_ip == true
   }
 
   interface_id = cloudru_evolution_compute_interface.this[each.key].id

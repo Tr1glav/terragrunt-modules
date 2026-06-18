@@ -22,6 +22,21 @@ data "cloudru_evolution_compute_zone_collection" "all" {
 }
 
 locals {
+  vms = merge([
+    for group_name, group in var.vm_groups : {
+      for vm_name, vm in group.vms : vm_name => {
+        external_ip = group.external_ip
+        subnet      = group.subnet
+        cpu         = group.cpu
+        ram         = group.ram
+        disk        = group.disk
+        flavor_type = group.flavor_type
+        sg          = group.sg
+        ip          = vm.ip
+      }
+    }
+  ]...)
+
   cloudru_disk_types = [
     for s in data.cloudru_evolution_compute_disk_type_collection.disk_type.disk_types : s if s.name == "SSD"
   ]
@@ -33,7 +48,7 @@ locals {
   }
 
   flavors = {
-    for name, config in var.vms : name =>
+    for name, config in local.vms : name =>
     try(one([
       for s in data.cloudru_evolution_compute_flavor_collection.flavor_collection.flavors :
       s if s.name == "${config.flavor_type}-${config.cpu}-${config.ram}"
