@@ -118,9 +118,5 @@ resource "cloudru_evolution_compute_external_ip" "this" {
   interface_id = cloudru_evolution_compute_interface.this[each.key].id
   project_id   = var.project_id
 
-  zone_identifier = {
-    name = local.subnet_by_cidr[each.value.subnet].zone.name
-  }
-
   name = "${each.key}-external-ip"
 }
