@@ -62,16 +62,16 @@ resource "cloudru_evolution_compute_interface" "this" {
 
   interface_security_enabled = !strcontains(each.key, "router")
 
-  security_groups_identifiers = {
-    value = !strcontains(each.key, "router") ? concat(
+  security_groups_identifiers = !strcontains(each.key, "router") ? {
+    value = concat(
       [{ id = local.sg["default-${local.zone_name_to_short_name[local.subnet_by_cidr[each.value.subnet].zone.name]}"].id }],
       length(try(each.value.sg, [])) > 0 ? [
         for sg_name in each.value.sg : {
           id = local.sg["${sg_name}-${local.zone_name_to_short_name[local.subnet_by_cidr[each.value.subnet].zone.name]}"].id
         }
       ] : []
-    ) : []
-  }
+    )
+  } : null
 }
 
 resource "cloudru_evolution_compute_vm" "this" {
